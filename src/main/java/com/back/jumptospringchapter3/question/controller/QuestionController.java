@@ -1,5 +1,6 @@
 package com.back.jumptospringchapter3.question.controller;
 
+import com.back.jumptospringchapter3.answer.dto.AnswerForm;
 import com.back.jumptospringchapter3.question.dto.QuestionForm;
 import com.back.jumptospringchapter3.question.service.QuestionService;
 import jakarta.validation.Valid;
@@ -22,13 +23,13 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String showQuestionDetail(Model model, @PathVariable Integer id) {
+    public String showQuestionDetail(Model model, @PathVariable Integer id, AnswerForm answerForm) {
         model.addAttribute("question", this.questionService.getQuestion(id));
         return "question_detail";
     }
 
     @GetMapping("/create")
-    public String showQuestionCreate() {
+    public String showQuestionCreate(QuestionForm questionForm) {
         return "question_form";
     }
 
