@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>질문 목록</title>
 </head>
-<body>
 
+<body>
+<h1>질문 목록</h1>
+
+<div th:each="question : ${questionList}">
+    <a th:href="@{|/question/detail/${question.id}|}"
+       th:text="${question.subject}"></a>
+</div>
+
+<div style="text-align: right;">
+    <a th:href="@{/question/create}">질문 등록</a>
+</div>
 </body>
 </html>

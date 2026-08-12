@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>질문 내용</title>
 </head>
-<body>
 
+<body>
+<h1 th:text="${question.subject}"></h1>
+
+<p th:text="${question.content}"></p>
+
+<h2>답변</h2>
+
+<div th:each="answer : ${question.answerList}">
+    <p th:text="${answer.subject}"></p>
+    <p th:text="${answer.content}"></p>
+</div>
+
+<h2>답변 달기</h2>
+
+<form th:action="@{|/create/${question.id}|}" method="post">
+    <input type="text" name="subject">
+    <textarea name="content"></textarea>
+    <button type="submit">답변 등록</button>
+</form>
+<a href="/question/list">목록으로</a>
 </body>
 </html>
