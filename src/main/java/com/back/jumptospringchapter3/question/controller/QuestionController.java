@@ -2,9 +2,11 @@ package com.back.jumptospringchapter3.question.controller;
 
 import com.back.jumptospringchapter3.answer.dto.AnswerForm;
 import com.back.jumptospringchapter3.question.dto.QuestionForm;
+import com.back.jumptospringchapter3.question.entity.Question;
 import com.back.jumptospringchapter3.question.service.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,8 +19,10 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/list")
-    public String showQuestionList(Model model) {
-        model.addAttribute("questionList", this.questionService.getList());
+    public String showQuestionList(Model model,
+                                   @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Question> paging = this.questionService.getList(page);
+        model.addAttribute("paging", paging);
         return "question_list";
     }
 
