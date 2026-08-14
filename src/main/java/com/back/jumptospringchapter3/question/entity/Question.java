@@ -1,6 +1,7 @@
 package com.back.jumptospringchapter3.question.entity;
 
 import com.back.jumptospringchapter3.answer.entity.Answer;
+import com.back.jumptospringchapter3.user.entity.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,4 +27,7 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
+    @ManyToOne
+    private SiteUser author;
 }

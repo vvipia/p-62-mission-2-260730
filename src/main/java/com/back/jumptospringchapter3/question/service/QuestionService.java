@@ -3,6 +3,7 @@ package com.back.jumptospringchapter3.question.service;
 import com.back.jumptospringchapter3.global.DataNotFoundException;
 import com.back.jumptospringchapter3.question.entity.Question;
 import com.back.jumptospringchapter3.question.repository.QuestionRepository;
+import com.back.jumptospringchapter3.user.entity.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,11 +38,12 @@ public class QuestionService {
         }
     }
 
-    public void saveQuestion(String subject, String content) {
+    public void saveQuestion(String subject, String content, SiteUser user) {
         Question question = new Question();
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
+        question.setAuthor(user);
         this.questionRepository.save(question);
     }
 }

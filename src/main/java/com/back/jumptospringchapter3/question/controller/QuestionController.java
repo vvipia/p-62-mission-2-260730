@@ -4,19 +4,24 @@ import com.back.jumptospringchapter3.answer.dto.AnswerForm;
 import com.back.jumptospringchapter3.question.dto.QuestionForm;
 import com.back.jumptospringchapter3.question.entity.Question;
 import com.back.jumptospringchapter3.question.service.QuestionService;
+import com.back.jumptospringchapter3.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/question")
 public class QuestionController {
     private final QuestionService questionService;
+    private final UserService userService;
 
     @GetMapping("/list")
     public String showQuestionList(Model model,
@@ -32,6 +37,7 @@ public class QuestionController {
         return "question_detail";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String showQuestionCreate(QuestionForm questionForm) {
         return "question_form";
@@ -45,12 +51,15 @@ public class QuestionController {
 //    }
 
     //form으로 받으면 자동으로 검증도 되면서 같은 속성이 바인딩 된다.
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+    public String questionCreate(@Valid QuestionForm questionForm,
+                                 BindingResult bindingResult,
+                                 Principal principal) {
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
-        this.questionService.saveQuestion(questionForm.getSubject(), questionForm.getContent());
+        this.questionService.saveQuestion(questionForm.getSubject(), questionForm.getContent(), this.userService.getUser(principal.getName()));
         return "redirect:/question/list";
     }
 }
