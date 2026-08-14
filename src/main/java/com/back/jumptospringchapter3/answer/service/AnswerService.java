@@ -2,12 +2,14 @@ package com.back.jumptospringchapter3.answer.service;
 
 import com.back.jumptospringchapter3.answer.entity.Answer;
 import com.back.jumptospringchapter3.answer.repository.AnswerRepository;
+import com.back.jumptospringchapter3.global.DataNotFoundException;
 import com.back.jumptospringchapter3.question.entity.Question;
 import com.back.jumptospringchapter3.user.entity.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,4 +25,22 @@ public class AnswerService {
         this.answerRepository.save(answer);
     }
 
+    public Answer getAnswer(Integer id) {
+        Optional<Answer> answer = this.answerRepository.findById(id);
+        if (answer.isPresent()) {
+            return answer.get();
+        } else {
+            throw new DataNotFoundException("answer not found");
+        }
+    }
+
+    public void modify(Answer answer, String content) {
+        answer.setContent(content);
+        answer.setModifyDate(LocalDateTime.now());
+        this.answerRepository.save(answer);
+    }
+
+    public void delete(Answer answer) {
+        this.answerRepository.delete(answer);
+    }
 }
