@@ -5,6 +5,7 @@ import com.back.jumptospringchapter3.answer.entity.Answer;
 import com.back.jumptospringchapter3.answer.service.AnswerService;
 import com.back.jumptospringchapter3.question.entity.Question;
 import com.back.jumptospringchapter3.question.service.QuestionService;
+import com.back.jumptospringchapter3.user.entity.SiteUser;
 import com.back.jumptospringchapter3.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,15 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.answerService.delete(answer);
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String answerVote(Principal principal, @PathVariable Integer id) {
+        Answer answer = this.answerService.getAnswer(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.answerService.vote(answer, siteUser);
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
     }
 }
